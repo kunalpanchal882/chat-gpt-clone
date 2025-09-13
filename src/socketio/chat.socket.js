@@ -1,84 +1,112 @@
 const { Server } = require("socket.io");
-const cookie = require('cookie')
-const jwt = require('jsonwebtoken')
-const userModel = require('../models/user.model')
-const aiResponseGenrator = require('../services/ai.service')
-const messageModel = require('../models/message.model')
+const cookie = require("cookie");
+const jwt = require("jsonwebtoken");
+const userModel = require("../models/user.model");
+const { aiResponseGenrator, genrateVector } = require("../services/ai.service");
+const messageModel = require("../models/message.model");
+const { createMemory, queryMemory } = require("../services/vector.service");
 
-async function initSocketServer(httpServer ) {
-    
-    const io = new Server(httpServer, { /* options */ });
 
-    io.use(async (socket,next) => {
-          const cookies = cookie.parse(socket.handshake.headers?.cookie || "");
+async function initSocketServer(httpServer) {
+  const io = new Server(httpServer, {});
 
-          
-          if(!cookies.token){
-            next(new Error("unauthorize user and error occur, no token provided"))
-          }
-          
-          try {
-            const decode = jwt.verify(cookies.token,process.env.JWT_SECRET)
+  io.use(async (socket, next) => {
+    const cookies = cookie.parse(socket.handshake.headers?.cookie || "");
 
-            const user = await userModel.findById(decode.id)
+    if (!cookies.token) {
+      next(new Error("unauthorize user and error occur, no token provided"));
+    }
 
-            socket.user = user
+    try {
+      const decode = jwt.verify(cookies.token, process.env.JWT_SECRET);
 
-            next()
+      const user = await userModel.findById(decode.id);
 
-          } catch (error) {
-            next(new Error("unauthorize user and error occur",error))
-          }
-    })
+      socket.user = user;
 
-    io.on("connection",async (socket) => {
-        console.log("connect to socket io",socket.id);
+      next();
+    } catch (error) {
+      next(new Error("unauthorize user and error occur", error));
+    }
+  });
 
-        socket.on("ai-message",async(messagepayload) => {
+  io.on("connection", async (socket) => {
+    console.log("connect to socket io", socket.id);
 
-          await messageModel.create({
-            user:socket.user._id,
-            chat:messagepayload.chat,
-            content:messagepayload.content,
-            role:"user"
+    socket.on("ai-message", async (messagepayload) => {
+
+
+      const aiMessage = await messageModel.create({
+        user: socket.user._id,
+        chat: messagepayload.chat,
+        content: messagepayload.content,
+        role: "user",
+      });
+
+      const messageVector = await genrateVector(messagepayload.content);
+
+      await createMemory({
+        vertors:messageVector,
+        messageId: aiMessage._id,
+        metadata: {
+          user: socket.user._id,
+          chat: messagepayload.chat,
+          content: messagepayload.content,
+        },
+      });
+
+      const memory =await queryMemory({
+       queryVector:messageVector,
+        metadata:{},
+        limit:3
+      })
+
+      const chatHistory = (
+        await messageModel
+          .find({
+            chat: messagepayload.chat,
           })
+          .sort({ createdAt: -1 })
+          .limit(20)
+          .lean()
+      ).reverse();
 
-          const chatHistory = (await messageModel.find({
-            chat:messagepayload.chat
-          }).sort({createdAt:-1}).limit(20).lean()).reverse()
-
-          
-
-          console.log(chatHistory);
-          
-
-          const response = await aiResponseGenrator(chatHistory.map((item) => {
-            return {
-              role:item.role,
-              parts:[{text:item.content}]
-            }
-
-          }))
-
-          console.log(response);
-
-           await messageModel.create({
-            user:socket.user._id,
-            chat:messagepayload.chat,
-            content:response,
-            role:"model"
-          })
-          
-          socket.emit("ai-response",{
-            content:response,
-            chat:messagepayload.chat
-          })
-          
-
+      const response = await aiResponseGenrator(
+        chatHistory.map((item) => {
+          return {
+            role: item.role,
+            parts: [{ text: item.content }],
+          };
         })
-        
-    });
+      );
 
+      const airesponse = await messageModel.create({
+        user: socket.user._id,
+        chat: messagepayload.chat,
+        content: response,
+        role: "model",
+      });
+      
+      const responseVector = await genrateVector(response)
+
+      await createMemory({
+        vertors:responseVector,
+        messageId: airesponse._id,
+        metadata: {
+          user: socket.user._id,
+          chat: messagepayload.chat,
+          content: response,
+        },
+      });
+
+      socket.emit("ai-response", {
+        content: response,
+        chat: messagepayload.chat,
+      });
+
+
+    });
+  });
 }
 
-module.exports = initSocketServer
+module.exports = initSocketServer;
