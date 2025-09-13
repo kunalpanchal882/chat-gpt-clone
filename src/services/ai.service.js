@@ -3,12 +3,12 @@ const { GoogleGenAI } = require("@google/genai");
 const ai = new GoogleGenAI({});
 
 
-async function aiResponseGEnartor() {
+async function aiResponseGenrator(content) {
     const response = await ai.models.generateContent({
     model: "gemini-2.5-flash",
-    contents: "Explain how AI works in a few words",
+    contents: content,
   });
-  console.log(response.text);
-
-
+  return response.text;
 }
+
+module.exports = aiResponseGenrator
