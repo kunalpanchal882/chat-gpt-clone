@@ -5,6 +5,7 @@ const userModel = require("../models/user.model");
 const { aiResponseGenrator, genrateVector } = require("../services/ai.service");
 const messageModel = require("../models/message.model");
 const { createMemory, queryMemory } = require("../services/vector.service");
+const { text } = require("express");
 
 
 async function initSocketServer(httpServer) {
@@ -55,30 +56,36 @@ async function initSocketServer(httpServer) {
         },
       });
 
-      const memory =await queryMemory({
+      const memory = await queryMemory({
        queryVector:messageVector,
-        metadata:{},
+        metadata:{
+          user:socket.user._id
+        },
         limit:3
       })
-
+      
       const chatHistory = (
-        await messageModel
-          .find({
+        await messageModel.find({
             chat: messagepayload.chat,
-          })
-          .sort({ createdAt: -1 })
-          .limit(20)
-          .lean()
-      ).reverse();
+      }).sort({ createdAt: -1 }).limit(20).lean()).reverse();
 
-      const response = await aiResponseGenrator(
-        chatHistory.map((item) => {
+      const stm = chatHistory.map((item) => {
           return {
             role: item.role,
             parts: [{ text: item.content }],
           };
-        })
-      );
+      })
+
+      const ltm = [{
+        role:"user",
+        parts:[{text:
+          `this are some priviose message from the chat ,use them to genrate a reponse
+          ${memory.map(item => item.metadata.content).join('/n')}
+          `
+        }]
+      }]
+
+      const response = await aiResponseGenrator([...ltm,...stm]);
 
       const airesponse = await messageModel.create({
         user: socket.user._id,

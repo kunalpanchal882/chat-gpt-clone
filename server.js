@@ -7,7 +7,7 @@ const initSocketServer = require('./src/socketio/chat.socket')
 
 connectDb()
 
-const httpServer = createServer();
+const httpServer = createServer(app);
 initSocketServer(httpServer)
 
 
