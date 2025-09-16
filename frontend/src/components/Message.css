@@ -13,25 +13,19 @@
 .message-content {
   padding: 12px 14px;
   border-radius: 14px;
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.02),
-    rgba(255, 255, 255, 0.01)
-  );
-  box-shadow: 0 6px 16px rgba(2, 6, 23, 0.5);
+  background: rgb(33, 33, 33);
   color: var(--text);
   font-size: 15px;
   line-height: 1.45;
 }
 .message.user .message-content {
-  background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+  background: rgb(33, 33, 33);
   color: #fff;
-  box-shadow: 0 10px 30px rgba(79, 70, 229, 0.18);
 }
 
 /* inline code and code blocks */
 .message-content code {
-  background: rgba(0, 0, 0, 0.28);
+  background: rgb(33, 33, 33);
   padding: 4px 6px;
   border-radius: 6px;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono",
@@ -39,7 +33,7 @@
   font-size: 13px;
 }
 .message-content pre {
-  background: rgba(0, 0, 0, 0.28);
+  background: rgb(33, 33, 33);
   padding: 12px;
   border-radius: 10px;
   overflow: auto;

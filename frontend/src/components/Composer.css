@@ -1,72 +1,172 @@
 .composer {
+  width: 70%;
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 18px 16px;
   display: flex;
-  gap: 12px;
-  padding-top: 10px;
-  align-items: flex-end;
+  justify-content: center;
+  background: transparent;
+  z-index: 30;
 }
-.composer textarea {
-  flex: 1 1 auto;
-  resize: none;
-  padding: 14px 16px;
-  border-radius: 999px; /* pill */
-  border: 1px solid rgba(255, 255, 255, 0.08);
+
+.composer-inner {
+  width: 100%;
+  max-width: 980px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgb(48, 48, 48);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  padding: 6px 8px;
+  border-radius: 999px;
+  box-shadow: 0 6px 20px rgba(2, 6, 23, 0.6);
+}
+
+.left-action {
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
   background: rgba(255, 255, 255, 0.03);
-  color: var(--text);
+  border: none;
+  color: #dbeafe;
+  cursor: pointer;
+}
+
+.left-action .plus-icon {
+  width: 18px;
+  height: 18px;
+  color: #dbeafe;
+}
+
+.composer-input {
+  flex: 1 1 auto;
+  background: transparent;
+  border: none;
+  color: #dbeafe;
   font-size: 15px;
+  padding: 12px 8px;
   min-height: 48px;
-  line-height: 1.2;
-  transition: box-shadow 0.12s ease, border-color 0.12s ease;
 }
-.composer textarea::placeholder {
-  color: rgba(255, 255, 255, 0.35);
+
+.composer-input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+  text-align: center;
 }
-.composer textarea:focus {
+
+.composer-input:focus {
   outline: none;
-  box-shadow: 0 8px 30px rgba(2, 6, 23, 0.45);
-  border-color: rgba(79, 70, 229, 0.85);
 }
-.composer .actions {
+
+.right-group {
   display: flex;
   gap: 8px;
   align-items: center;
 }
-.composer .send {
+
+.mic-btn {
+  width: 44px;
+  height: 44px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 44px;
-  height: 44px;
-  padding: 8px;
-  background: linear-gradient(180deg, var(--accent-1), var(--accent-2));
-  color: #fff;
-  border: none;
   border-radius: 999px;
+  background: rgba(255, 255, 255, 0.02);
+  border: none;
+  color: #dbeafe;
   cursor: pointer;
-  box-shadow: 0 8px 20px rgba(79, 70, 229, 0.12);
-  transition: transform 0.12s ease, box-shadow 0.12s ease, opacity 0.12s ease;
-}
-.composer .send:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 14px 36px rgba(79, 70, 229, 0.18);
-}
-.composer .send:active:not(:disabled) {
-  transform: translateY(0);
-}
-.composer .send:disabled {
-  opacity: 0.45;
-  cursor: default;
-}
-.composer .icon {
-  width: 18px;
-  height: 18px;
-  display: inline-block;
-  color: #fff; /* uses currentColor in svg */
 }
 
-/* small screens: slightly smaller send button */
+.mic-icon {
+  width: 18px;
+  height: 18px;
+}
+
+.send {
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+}
+
+
+
+.send:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
 @media (max-width: 420px) {
-  .composer .send {
+  .composer {
+    padding: 12px;
+  }
+  .composer-inner {
+    padding: 6px;
+  }
+  .left-action,
+  .mic-btn,
+  .send {
     width: 40px;
     height: 40px;
   }
+  .composer-input {
+    min-height: 40px;
+  }
 }
+
+@media (max-width: 768px) {
+  .composer {
+    width: 100%;
+    padding: 10px;
+  }
+
+  .composer-inner {
+    max-width: 100%;
+    gap: 6px;
+    padding: 6px 10px;
+  }
+
+  .composer-input {
+    font-size: 14px;
+    padding: 10px 6px;
+    min-height: 42px;
+  }
+
+  .left-action,
+  .mic-btn,
+  .send {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0; /* keeps buttons from shrinking */
+  }
+}
+
+@media (max-width: 420px) {
+  .composer-inner {
+    gap: 4px;
+    padding: 4px 6px;
+    border-radius: 20px;
+  }
+
+  .composer-input {
+    font-size: 13px;
+    padding: 8px 6px;
+    min-height: 38px;
+  }
+
+  .left-action,
+  .mic-btn,
+  .send {
+    width: 36px;
+    height: 36px;
+  }
+}
+
