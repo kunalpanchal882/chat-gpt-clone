@@ -1,0 +1,117 @@
+.center-min-h-screen {
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-6) var(--space-4);
+}
+
+.authCard{
+  width: 100%;
+  background-color: rgb(47, 47, 47);
+  max-width: 21rem;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  border: 2px solid rgb(33, 33, 33);
+  color: #F5F5F5;
+  border-radius: 1rem;
+  box-shadow: rgb(70, 70, 70) 1px 1px 1px 1px;
+}
+
+.authHeader{
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.authCard h1{
+   text-align: center;
+  background: linear-gradient(to right, #858e96, #60696b);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text; /* For modern browsers */
+}
+
+.authCard p{
+  font-size: 1.2rem;
+}
+
+.authCard .authSub{
+text-align: center;
+}
+
+form.authForm{
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+}
+
+form.authForm .FielGroup{
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem
+}
+
+form.authForm .FielGroup label{
+  font-size: 1.2rem;
+  font-weight: 400;
+}
+
+form.authForm .FielGroup input{
+  font: inherit;
+  padding: 0.2rem;
+  border: 1px solid rgba(104, 102, 102, 0.481);
+  border-radius: 0.3rem;
+  background-color: rgba(72, 71, 71, 0.593);
+  color: aliceblue;
+  transition: border-color var(--transition-fast), background var(--transition-fast)
+}
+
+form.authForm input:focus {
+  outline: none;
+  border-color: rgba(110, 109, 109, 0.514);
+  box-shadow: var(--color-focus-ring);
+  background: rgba(108, 106, 106, 0.177);
+}
+
+form.authForm .Grid{
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 1.2rem;
+}
+
+.authCard input{
+  min-width: 0
+}
+
+.RegisterBtn{
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(9, 8, 8, 0.756);
+  border-radius: 0.6rem;
+  padding: 0.5rem;
+  background: rgba(55, 53, 53, 0.84);
+  color: rgb(226, 218, 218);
+  transition: background var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.authAlt{
+  color: #F5F5F5;
+}
+
+.authCard .authAlt a{
+  color: rgb(159, 161, 162);
+}
+
+.RegisterBtn:focus{
+  outline: none;
+  box-shadow: black;
+}
+
+.RegisterBtn:hover{
+  background-color: black;
+}

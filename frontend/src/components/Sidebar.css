@@ -1,0 +1,62 @@
+/* Sidebar component styles - precise to design */
+.sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.brand .logo {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+  box-shadow: 0 6px 16px rgba(79, 70, 229, 0.18);
+}
+.brand .title {
+  font-weight: 800;
+  font-size: 16px;
+  color: var(--text);
+}
+.new-chat-btn {
+  background: transparent;
+  color: var(--text);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  padding: 8px 10px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+.new-chat-btn:hover {
+  background: rgba(255, 255, 255, 0.02);
+  transform: translateY(-1px);
+}
+.conversations {
+  margin-top: 14px;
+}
+.conversation-item {
+  cursor: pointer;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.conversation-item .avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.03);
+}
+.conversation-item .meta {
+  display: flex;
+  flex-direction: column;
+}
+.conversation-item .meta .name {
+  font-weight: 600;
+}
+.conversation-item .meta .preview {
+  font-size: 12px;
+  color: var(--muted);
+}
