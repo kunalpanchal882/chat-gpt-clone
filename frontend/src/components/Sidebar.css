@@ -1,12 +1,12 @@
 /* Sidebar component styles - exact dark UI */
 .sidebar {
   position: relative;
-background: rgb(24, 24, 24);
+  background: rgb(24, 24, 24);
   color: var(--text);
   padding: 18px 16px;
   display: flex;
   flex-direction: column;
-  height: 100vh; /* fix: sidebar always full screen height */
+  height: 100vh; /* sidebar full screen height */
   overflow: hidden; /* prevent double scrollbar */
 }
 
@@ -68,21 +68,53 @@ background: rgb(24, 24, 24);
   padding-right: 6px;
 }
 
+/* Conversation item */
 .conversation-item {
-  padding: 10px 8px;
-  border-radius: 8px;
-  background: transparent;
-  margin-bottom: 8px;
-  cursor: pointer;
   display: flex;
-  gap: 10px;
   align-items: center;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.2s, border 0.2s, transform 0.2s;
+  color: #ddd;
+  border: 1px solid transparent; /* default border */
+  background-color: transparent;
 }
 
-.conversation-item:hover { background: rgba(255,255,255,0.03); transform: translateY(-1px) }
+.conversation-item:hover {
+  background: rgba(255, 255, 255, 0.03);
+  transform: translateY(-1px);
+}
 
-.avatar { width: 36px; height: 36px; border-radius: 8px; background: rgba(255,255,255,0.03) }
+.conversation-item.active {
+  background-color: rgb(40, 40, 40); /* slightly lighter than sidebar */
+  color: white;                     /* active text */
+  border: 1px solid white;          /* white border for active chat */
+}
 
-.meta { display:flex; flex-direction:column }
-.name { font-weight:600; font-size:14px }
-.preview { font-size:12px; color:var(--muted) }
+.conversation-item.active:hover {
+  background-color: rgb(40, 40, 40); /* keep same on hover */
+  transform: none;
+}
+
+.conversation-item .meta .name {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.conversation-item .meta .preview {
+  font-size: 12px;
+  color: #888;
+}
+
+.avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.meta {
+  display: flex;
+  flex-direction: column;
+}

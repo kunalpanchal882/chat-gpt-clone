@@ -22,16 +22,17 @@
 }
 
 .welcome-title {
-  font-size: 4rem;
-   background: linear-gradient(to right , #858e96, #60696b);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  font-weight: 700;
+   font-size: clamp(1.75rem, 5vw, 2.75rem);
+   background: linear-gradient(90deg, #fafafa, #5a5a5a);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  font-weight: 500;
   margin-bottom: 8px;
 }
 
 .welcome-subtitle {
-  font-size: 16px;
+  font-size: clamp(0.6rem, 3vw, 1.2rem); 
   color: #aaa;
 }
 
@@ -124,6 +125,7 @@
 }
 
 .chat-area {
+  width: 100%;
   display: flex;
   background-color: rgb(33, 33, 33);
   flex-direction: column;
@@ -153,7 +155,7 @@
 }
 
 .message {
-  max-width: 85%;
+  max-width: 100%;
 }
 .message.user {
   align-self: flex-end;

@@ -23,7 +23,7 @@ const Register = () => {
     setsubmition(true);
     console.log(form);
 
-    axios.post("http://localhost:3000/auth/register", {
+    await axios.post("http://localhost:3000/auth/register", {
       email: form.email,
       fullname: {
         firstname: form.firstname,

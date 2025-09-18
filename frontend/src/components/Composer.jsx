@@ -3,6 +3,8 @@ import { FaCircleArrowUp } from "react-icons/fa6";
 import './Composer.css'
 
 export default function Composer({ input, setInput, onKeyDown, sendMessage, isSending }) {
+   
+  
   return (
     <div className="composer">
       <div className="composer-inner">

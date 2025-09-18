@@ -4,6 +4,16 @@
   display: flex;
   flex-direction: column;
 }
+
+.messages::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Edge */
+}
+
+.messages {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;     /* Firefox */
+}
+
 .message.user {
   align-self: flex-end;
 }

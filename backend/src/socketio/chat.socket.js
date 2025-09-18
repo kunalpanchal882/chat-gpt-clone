@@ -7,9 +7,16 @@ const messageModel = require("../models/message.model");
 const { createMemory, queryMemory } = require("../services/vector.service");
 const { text } = require("express");
 
-async function initSocketServer(httpServer) {
-  const io = new Server(httpServer, {});
 
+async function initSocketServer(httpServer) {
+  const io = new Server(httpServer, {
+    cors:{
+      origin:"http://localhost:5174",
+      credentials:true
+    }
+  });
+
+  
   io.use(async (socket, next) => {
     const cookies = cookie.parse(socket.handshake.headers?.cookie || "");
 
