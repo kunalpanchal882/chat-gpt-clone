@@ -7,16 +7,12 @@ import "../style/Home.css";
 import { BiMenuAltLeft } from "react-icons/bi";
 import { useSelector, useDispatch } from "react-redux";
 import {
-  ensureInitialChat,
-  startNewChat,
   selectChat,
   setInput,
   sendingStarted,
   sendingFinished,
-  addUserMessage,
-  addAIMessage,
   setChats,
-} from "../store/chatslice"; // adjust path if needed
+} from "../store/chatslice";
 import axios from "axios";
 
 const Home = () => {
@@ -26,31 +22,21 @@ const Home = () => {
   );
 
   const [socket, setSocket] = useState(null);
-
-  const [sidebarOpen, setSidebarOpen] = useState(false); // keep sidebar local
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [messages, setMessages] = useState([]);
   const scrollRef = useRef(null);
-
-  const activeChat = chats.find((c) => c.id === activeChatId) || null;
-
-  
 
   const chatId = activeChatId?.id;
 
-  console.log(chatId);
-
-  const [messages, setmessages] = useState([]);
-
-  // ensure one chat exists at start
+  // Fetch chats and initialize socket
   useEffect(() => {
     axios
       .get("http://localhost:3000/chat/", { withCredentials: true })
       .then((res) => {
         const apiChats = res.data.chats.map((c) => ({
-          id: c._id, // slice ke liye id
-          title: c.title, // slice ke liye title    // abhi backend se messages nahi aa rahe to empty rakho
+          id: c._id,
+          title: c.title,
         }));
-
-        // slice me save karo
         dispatch(setChats(apiChats.reverse()));
       })
       .catch((err) => {
@@ -63,54 +49,31 @@ const Home = () => {
 
     setSocket(tempSocket);
 
-    tempSocket.on("ai-response", (messagepayload) => {
-      console.log("ai message", messagepayload);
-
-      setmessages((c) => [
-        ...c,
-        {
-          type: "ai",
-          content: messagepayload.content,
-        },
+    tempSocket.on("ai-response", (messagePayload) => {
+      setMessages((prev) => [
+        ...prev,
+        { type: "ai", content: messagePayload.content },
       ]);
     });
-  }, []);
+  }, [dispatch]);
 
-  // auto-scroll on new message
+  // Auto-scroll to bottom on new messages
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
     }
   }, [messages]);
 
-  const sendMessage = async () => {
-    console.log("sendMessage CALLED");
+  const sendMessage = () => {
     const trimmed = input.trim();
+    if (!trimmed || !chatId) return;
 
-    if (!trimmed || !activeChatId) return;
-
-    console.log("Sending:", trimmed, "ChatId:", activeChatId);
-
-    // add user message to active chat
-    // dispatch(addUserMessage(activeChatId, trimmed));
-    setmessages((p) => [
-      ...p,
-      {
-        type: "user",
-        content: trimmed,
-      },
-    ]);
+    setMessages((prev) => [...prev, { type: "user", content: trimmed }]);
     dispatch(setInput(""));
     dispatch(sendingStarted());
 
-    socket.emit("ai-message", {
-      chat: activeChatId.id,
-      content: trimmed,
-    });
+    socket.emit("ai-message", { chat: chatId, content: trimmed });
 
-    // get AI reply
-
-    // dispatch(addAIMessage(activeChatId, replyText));
     dispatch(sendingFinished());
   };
 
@@ -123,58 +86,51 @@ const Home = () => {
 
   const createNewChat = async () => {
     const name = window.prompt("Enter a name for the new chat", "New chat");
-    if (name === null) return;
-    const title = name && name.trim();
+    if (!name) return;
 
-    const res = await axios.post("http://localhost:3000/chat/",
-      {
-        title,
-      },
-      {
-        withCredentials: true,
-      }
+    const title = name.trim();
+    const res = await axios.post(
+      "http://localhost:3000/chat/",
+      { title },
+      { withCredentials: true }
     );
 
-    getMessage(res.data.chat._id)
-
-    console.log(res.data);
+    getMessages(res.data.chat._id);
     dispatch(selectChat({ title: res.data.chat.title, id: res.data.chat._id }));
     setSidebarOpen(false);
   };
 
-  const getMessage = async (chatId) => {
-  try {
-    const res = await axios.get(`http://localhost:3000/chat/message/${chatId}`, {
-      withCredentials: true
-    });
-
-    console.log(res.data.messages);
-
-    if (res.data.messages) {
-      setmessages(
-        res.data.messages.map((m) => ({
-          type: m.role === 'user' ? 'user' : 'ai',
-          content: m.content
-        }))
+  const getMessages = async (chatId) => {
+    try {
+      const res = await axios.get(
+        `http://localhost:3000/chat/message/${chatId}`,
+        { withCredentials: true }
       );
-    } else {
-      setmessages([]);
+
+      if (res.data.messages) {
+        setMessages(
+          res.data.messages.map((m) => ({
+            type: m.role === "user" ? "user" : "ai",
+            content: m.content,
+          }))
+        );
+      } else {
+        setMessages([]);
+      }
+    } catch (err) {
+      console.error("Error fetching messages:", err);
+      setMessages([]);
     }
-  } catch (err) {
-    console.error("Error fetching messages:", err);
-    setmessages([]);
-  }
-};
+  };
 
-// Fetch messages whenever active chat changes
-useEffect(() => {
-  if (activeChatId?.id) {
-    getMessage(activeChatId.id);
-  } else {
-    setmessages([]);
-  }
-}, [activeChatId]);
-
+  // Fetch messages whenever active chat changes
+  useEffect(() => {
+    if (chatId) {
+      getMessages(chatId);
+    } else {
+      setMessages([]);
+    }
+  }, [chatId]);
 
   return (
     <div className="home-root">
@@ -193,6 +149,7 @@ useEffect(() => {
             aria-label="Open chats"
           />
         </div>
+
         <div className="messages" ref={scrollRef}>
           {messages.length === 0 ? (
             <div className="welcome-screen">
@@ -211,14 +168,16 @@ useEffect(() => {
             ))
           )}
         </div>
-        {activeChatId?.id &&
+
+        {chatId && (
           <Composer
-          input={input}
-          setInput={(val) => dispatch(setInput(val))}
-          onKeyDown={onKeyDown}
-          sendMessage={sendMessage}
-          isSending={isSending}
-        />}
+            input={input}
+            setInput={(val) => dispatch(setInput(val))}
+            onKeyDown={onKeyDown}
+            sendMessage={sendMessage}
+            isSending={isSending}
+          />
+        )}
       </main>
     </div>
   );
