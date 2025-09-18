@@ -19,7 +19,7 @@ export default function Composer({ input, setInput, onKeyDown, sendMessage, isSe
           </svg>
         </button>
 
-        <input
+        <textarea
           className="composer-input"
           value={input}
           onChange={(e) => setInput(e.target.value)}
