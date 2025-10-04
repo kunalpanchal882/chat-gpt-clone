@@ -95,5 +95,27 @@ async function genrateVector(content) {
   return response.embeddings[0].values
 }
 
+async function createCaption(base64ImageFile) {
+  const contents = [
+    {
+      inlineData: {
+        mimeType: "image/jpeg",
+        data: base64ImageFile,
+      },
+    },
+    { text: "Caption this image." },
+  ];
 
-module.exports = {aiResponseGenrator,genrateVector}
+  const response = await ai.models.generateContent({
+    model: "gemini-2.5-flash",
+    contents: contents,
+    config: {
+      systemInstruction: `can u genrate one image caption which is only 10 word and also include hashtags in it,
+      caption  should be in hinglish ,caption should me attractive also,caption genration should be foe instagram like apps`,
+    },
+  });
+  return response.text
+}
+
+
+module.exports = {aiResponseGenrator,genrateVector,createCaption}
