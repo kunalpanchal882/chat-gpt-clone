@@ -14,6 +14,8 @@
   scrollbar-width: none;     /* Firefox */
 }
 
+
+
 .message.user {
   align-self: flex-end;
 }
@@ -50,3 +52,5 @@
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono",
     "Courier New", monospace;
 }
+
+

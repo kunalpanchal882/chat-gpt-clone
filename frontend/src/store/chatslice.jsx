@@ -11,12 +11,22 @@ const initialState = {
   activeChatId: null,
   isSending: false,
   input: "",
+  isLoggedIn:false,
 };
 
 const chatSlice = createSlice({
   name: "chat",
   initialState,
   reducers: {
+    loginSuccess(state){
+      state.isLoggedIn=true
+    },
+    logout(state){
+      state.isLoggedIn=false,
+      state.chats=[],
+      state.activeChatId=null
+    },
+
     ensureInitialChat(state) {
       if (state.chats.length === 0) {
         const chat = createEmptyChat();
@@ -107,6 +117,8 @@ export const {
   addUserMessage,
   addAIMessage,
   setChats,
+  loginSuccess,
+  logout
 } = chatSlice.actions;
 
 export default chatSlice.reducer;

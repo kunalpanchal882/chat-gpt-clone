@@ -50,10 +50,32 @@ const Home = () => {
     setSocket(tempSocket);
 
     tempSocket.on("ai-response", (messagePayload) => {
-      setMessages((prev) => [
-        ...prev,
-        { type: "ai", content: messagePayload.content },
-      ]);
+      setMessages((prev) => {
+        // agar last message AI ka hi hai, usko append karo
+        if (
+          prev.length > 0 &&
+          prev[prev.length - 1].type === "ai" &&
+          !messagePayload.done
+        ) {
+          const updated = [...prev];
+          updated[updated.length - 1].content += messagePayload.content;
+          return updated;
+        }
+
+        // agar naya AI response start hua
+        if (!messagePayload.done) {
+          return [...prev, { type: "ai", content: messagePayload.content }];
+        }
+
+        // jab done true ho jaye, kuch extra karna ho to yahan (optional)
+        return prev;
+      });
+
+      // Stop typing when AI is done
+  if (messagePayload.done) {
+    dispatch(sendingFinished());
+  }
+
     });
   }, [dispatch]);
 
@@ -73,8 +95,6 @@ const Home = () => {
     dispatch(sendingStarted());
 
     socket.emit("ai-message", { chat: chatId, content: trimmed });
-
-    dispatch(sendingFinished());
   };
 
   const onKeyDown = (e) => {
@@ -132,6 +152,9 @@ const Home = () => {
     }
   }, [chatId]);
 
+  console.log("ai reposne",isSending);
+  
+
   return (
     <div className="home-root">
       <Sidebar
@@ -150,7 +173,7 @@ const Home = () => {
           />
         </div>
 
-        <div className="messages" ref={scrollRef}>
+        {/* <div className="messages" ref={scrollRef}>
           {messages.length === 0 ? (
             <div className="welcome-screen">
               <div className="chip">Early Preview</div>
@@ -166,6 +189,40 @@ const Home = () => {
             messages.map((m, idx) => (
               <Message key={idx} message={{ role: m.type, text: m.content }} />
             ))
+          )}
+        </div> */}
+
+        <div className="messages" ref={scrollRef}>
+          {messages.length === 0 ? (
+            <div className="welcome-screen">
+              <div className="chip">Early Preview</div>
+              <h1 className="welcome-title">ChatGPT Clone</h1>
+              <p className="welcome-subtitle">
+                Ask anything. Paste text, brainstorm ideas, or get quick <br />
+                explanations. Your chats stay in the sidebar so you can pick up{" "}
+                <br />
+                where you left off.
+              </p>
+            </div>
+          ) : (
+            <>
+              {messages.map((m, idx) => (
+                <Message
+                  key={idx}
+                  message={{ role: m.type, text: m.content }}
+                />
+              ))}
+
+              {/* ✅ Show typing indicator when AI is responding */}
+              {isSending && (
+                <div className="ai-typing">
+                  <span>🤖 Typing</span>
+                  <span className="dot">.</span>
+                  <span className="dot">.</span>
+                  <span className="dot">.</span>
+                </div>
+              )}
+            </>
           )}
         </div>
 

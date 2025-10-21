@@ -6,6 +6,7 @@ const { aiResponseGenrator, genrateVector } = require("../services/ai.service");
 const messageModel = require("../models/message.model");
 const { createMemory, queryMemory } = require("../services/vector.service");
 const { text } = require("express");
+const { chat } = require("@pinecone-database/pinecone/dist/assistant/data/chat");
 
 
 async function initSocketServer(httpServer) {
@@ -123,10 +124,32 @@ async function initSocketServer(httpServer) {
 
       const response = await aiResponseGenrator([...ltm, ...stm]);
 
-      socket.emit("ai-response", {
-        content: response,
+      const words = response.split(" ")
+      let index = 0;
+
+      const interval = setInterval(() => {
+        if(index < words.length){
+          socket.emit("ai-response", {
+        content: words[index] + "",
         chat: messagepayload.chat,
+        done:false
       });
+      index++;
+        }
+        else{
+          clearInterval(interval);
+          socket.emit('ai-response',{
+            content:"",
+            chat:messagepayload.chat,
+            done:true,
+          })
+        }
+      },50)
+
+      // socket.emit("ai-response", {
+      //   content: response,
+      //   chat: messagepayload.chat,
+      // });
 
       const [airesponse,responseVector] = await Promise.all([
          messageModel.create({

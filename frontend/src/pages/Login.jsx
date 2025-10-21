@@ -2,7 +2,8 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../style/Auth.css";
 import axios from "axios";
-
+import { useDispatch } from "react-redux";
+import {loginSuccess} from '../store/chatslice'
 const Login = () => {
   const [form, setform] = useState({
     email: "",
@@ -12,6 +13,7 @@ const Login = () => {
   });
   const [submition, setsubmition] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch()
 
   function changeHandler(e) {
     const { name, value } = e.target;
@@ -30,6 +32,7 @@ const Login = () => {
         withCredentials:true
     }).then((res) => {
         console.log(res.data);
+        dispatch(loginSuccess())
         navigate('/') 
     }).catch((err) => {
         console.log('Register failed',err);

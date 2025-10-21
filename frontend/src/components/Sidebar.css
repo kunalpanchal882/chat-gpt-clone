@@ -10,6 +10,58 @@
   overflow: hidden; /* prevent double scrollbar */
 }
 
+.sidebar .login-register-container{
+  position: absolute;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 0.3rem;
+  gap: 0.3rem;
+  justify-content: center;
+  width: 90%;
+  
+}
+
+.sidebar .login-register-container button{
+  width: 100%;
+  color: rgba(230,238,248,0.9);
+  font-weight: 400;
+  padding: 10px 12px;
+  border-radius: 999px; /* pill-like menu items */
+  cursor: pointer;
+  font-size: 14px;
+  background-color: transparent;
+  border: 0.2rem solid rgba(0, 0, 0, 0.127);
+}
+
+.sidebar .login-register-container button:hover{
+  background: #1f1f1f;
+}
+
+.sidebar .Logout{
+   position: absolute;
+  bottom: 0;
+  margin-bottom: 0.3rem;
+  gap: 0.3rem;
+  width: 90%;
+}
+
+.sidebar .Logout button{
+  width: 100%;
+  color: rgba(230,238,248,0.9);
+  font-weight: 400;
+  padding: 10px 12px;
+  border-radius: 999px; /* pill-like menu items */
+  cursor: pointer;
+  font-size: 14px;
+  background-color: transparent;
+  border: 0.2rem solid rgba(0, 0, 0, 0.127);
+}
+
+.sidebar .Logout button:hover{
+  background: #1f1f1f;
+}
+
 .left-nav {
   margin-bottom: 18px;
 }

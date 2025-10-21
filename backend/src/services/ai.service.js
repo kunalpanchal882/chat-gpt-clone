@@ -26,6 +26,7 @@ async function aiResponseGenrator(content) {
   </greeting>
 
   <behaviour>
+    -Awlays give net and clear answer and also guve saoce between word and give clear understandable answer
     - Always give accurate and correct answers  
     - If user asks for code, provide clean, working examples with a brief explanation  
     - Wrap code only inside <code> ... </code> tags (no persona tags in answers)  
@@ -92,7 +93,12 @@ async function genrateVector(content) {
     }
   })
 
+  console.log(response.embeddings);
   return response.embeddings[0].values
+
+  
+
+
 }
 
 async function createCaption(base64ImageFile) {
