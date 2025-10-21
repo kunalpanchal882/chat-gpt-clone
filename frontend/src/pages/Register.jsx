@@ -1,7 +1,7 @@
+import axios from "axios";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../style/Auth.css";
-import axios from "axios";
 
 const Register = () => {
   const [form, setform] = useState({
@@ -23,7 +23,7 @@ const Register = () => {
     setsubmition(true);
     console.log(form);
 
-    await axios.post("http://localhost:3000/auth/register", {
+    await axios.post("https://chat-gpt-clone-epy3.onrender.com/auth/register", {
       email: form.email,
       fullname: {
         firstname: form.firstname,

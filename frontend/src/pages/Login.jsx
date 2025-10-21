@@ -1,9 +1,9 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import "../style/Auth.css";
 import axios from "axios";
+import { useState } from "react";
 import { useDispatch } from "react-redux";
-import {loginSuccess} from '../store/chatslice'
+import { Link, useNavigate } from "react-router-dom";
+import { loginSuccess } from '../store/chatslice';
+import "../style/Auth.css";
 const Login = () => {
   const [form, setform] = useState({
     email: "",
@@ -25,7 +25,7 @@ const Login = () => {
     setsubmition(true);
     console.log(form);
 
-    axios.post("http://localhost:3000/auth/login", {
+    axios.post("https://chat-gpt-clone-epy3.onrender.com/auth/login", {
       email: form.email,
       password: form.password,
     },{

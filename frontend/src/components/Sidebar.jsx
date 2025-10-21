@@ -1,9 +1,9 @@
-import { useDispatch, useSelector } from "react-redux";
-import "./Sidebar.css";
-import { selectChat } from "../store/chatslice";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { logout } from ".././store/chatslice";
+import { selectChat } from "../store/chatslice";
+import "./Sidebar.css";
 
 export default function Sidebar({
   conversations,
@@ -28,7 +28,7 @@ export default function Sidebar({
 
   const handelLogOut = () => {
     axios
-      .post("http://localhost:3000/auth/logout", {}, { withCredentials: true })
+      .post("https://chat-gpt-clone-epy3.onrender.com/auth/logout", {}, { withCredentials: true })
       .then((res) => {
         console.log(res.data);
         dispatch(logout());

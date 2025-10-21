@@ -1,19 +1,19 @@
+import axios from "axios";
 import { useEffect, useRef, useState } from "react";
+import { BiMenuAltLeft } from "react-icons/bi";
+import { useDispatch, useSelector } from "react-redux";
 import { io } from "socket.io-client";
 import Composer from "../components/Composer";
 import Message from "../components/Message";
 import Sidebar from "../components/Sidebar";
-import "../style/Home.css";
-import { BiMenuAltLeft } from "react-icons/bi";
-import { useSelector, useDispatch } from "react-redux";
 import {
   selectChat,
-  setInput,
-  sendingStarted,
   sendingFinished,
+  sendingStarted,
   setChats,
+  setInput,
 } from "../store/chatslice";
-import axios from "axios";
+import "../style/Home.css";
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -31,7 +31,7 @@ const Home = () => {
   // Fetch chats and initialize socket
   useEffect(() => {
     axios
-      .get("http://localhost:3000/chat/", { withCredentials: true })
+      .get("https://chat-gpt-clone-epy3.onrender.com/chat/", { withCredentials: true })
       .then((res) => {
         const apiChats = res.data.chats.map((c) => ({
           id: c._id,
@@ -43,7 +43,7 @@ const Home = () => {
         console.error("Error fetching chats:", err);
       });
 
-    const tempSocket = io("http://localhost:3000", {
+    const tempSocket = io("https://chat-gpt-clone-epy3.onrender.com", {
       withCredentials: true,
     });
 
@@ -110,7 +110,7 @@ const Home = () => {
 
     const title = name.trim();
     const res = await axios.post(
-      "http://localhost:3000/chat/",
+      "https://chat-gpt-clone-epy3.onrender.com/chat/",
       { title },
       { withCredentials: true }
     );
@@ -123,7 +123,7 @@ const Home = () => {
   const getMessages = async (chatId) => {
     try {
       const res = await axios.get(
-        `http://localhost:3000/chat/message/${chatId}`,
+        `https://chat-gpt-clone-epy3.onrender.com/chat/message/${chatId}`,
         { withCredentials: true }
       );
 
